@@ -1,6 +1,9 @@
 use std::ops::Add;
 use std::ops::Sub;
 use std::ops::Neg;
+use std::ops::AddAssign;
+use std::ops::SubAssign;
+use std::ops::Index;
 
 #[derive(Debug, PartialEq)]
 pub struct Vec3 {
@@ -31,43 +34,46 @@ impl Vec3 {
     }
 }
 
-// Altering the Vec3 itself
-impl Add<&Vec3> for Vec3 {
-    type Output = Vec3;
-
-    fn add(mut self, other: &Vec3) -> Self {
-        self.e[0] += other.e[0];
-        self.e[1] += other.e[1];
-        self.e[2] += other.e[2];
-
-        self
-    }
-}
-
-impl Sub<&Vec3> for Vec3 {
-    type Output = Vec3;
-
-    fn sub(mut self, other: &Vec3) -> Self {
-        self.e[0] -= other.e[0];
-        self.e[1] -= other.e[1];
-        self.e[2] -= other.e[2];
-
-        self
-    }
-}
-
-/*impl Neg for Vec3 {
+impl Neg for Vec3 {
     type Output = Vec3;
 
     fn neg(self) -> Vec3 {
-        Vec3::new(-e[0], -3[])
-        match self {
-            Sign::Negative => Sign::Positive,
-            Sign::Zero => Sign::Zero,
-            Sign::Positive => Sign::Negative,
-        }
+        Vec3::new(-self.e[0], -self.e[1], -self.e[2])
     }
-}*/
+}
+
+impl Index<usize> for Vec3 {
+    type Output = f64;
+
+    fn index(&self, index: usize) -> &f64 {
+        &self.e[index]
+    }
+}
+
+impl Index<usize> for &Vec3 {
+    type Output = f64;
+
+    fn index(&self, index: usize) -> &f64 {
+        &self.e[index]
+    }
+}
+
+// Altering the Vec3 itself
+impl AddAssign<&Vec3> for Vec3 {
+    fn add_assign(&mut self, other: &Vec3) {
+        self.e[0] += other.e[0];
+        self.e[1] += other.e[1];
+        self.e[2] += other.e[2];
+    }
+}
+
+impl SubAssign<&Vec3> for Vec3 {
+    fn sub_assign(&mut self, other: &Vec3) {
+        self.e[0] -= other.e[0];
+        self.e[1] -= other.e[1];
+        self.e[2] -= other.e[2];
+    }
+}
 
 // Altering the &Vec3
 impl Add for &Vec3 {
@@ -95,6 +101,28 @@ mod tests {
     use super::*;
 
     #[test]
+    fn it_makes_new_negative_vec3() {
+        let vec3 = Vec3::new(1.0, 2.0, 3.0);
+
+        assert_eq!(Vec3::new(-1.0, -2.0, -3.0), -vec3);
+    }
+
+    #[test]
+    fn it_can_use_indices() {
+        let vec3 = Vec3::new(1.0, 2.0, 3.0);
+
+        // check reference indices
+        assert_eq!(&1.0, &vec3[0]);
+        assert_eq!(&2.0, &vec3[1]);
+        assert_eq!(&3.0, &vec3[2]);
+
+        // check moved indices
+        assert_eq!(1.0, vec3[0]);
+        assert_eq!(2.0, vec3[1]);
+        assert_eq!(3.0, vec3[2]);
+    }
+
+    #[test]
     fn it_adds_two_vec3s_by_ref_and_returns_new_vec3() {
         let vec3_first = Vec3::new(1.0, 2.0, 3.0);
         let vec3_second = Vec3::new(4.0, 5.0, 6.0);
@@ -107,12 +135,11 @@ mod tests {
 
     #[test]
     fn it_adds_vec3_to_the_first_one() {
-        let vec3_first = Vec3::new(1.0, 2.0, 3.0);
+        let mut vec3_first = Vec3::new(1.0, 2.0, 3.0);
         let vec3_second = Vec3::new(4.0, 5.0, 6.0);
 
-        let vec3_result = vec3_first + &vec3_second;
+        vec3_first += &vec3_second;
         assert_eq!(&Vec3::new(5.0,7.0,9.0), &vec3_first);
-        assert_eq!(&Vec3::new(5.0,7.0,9.0), &vec3_result);
         assert_eq!(Vec3::new(4.0, 5.0, 6.0), vec3_second);
     }
 

@@ -32,6 +32,14 @@ impl Vec3 {
     fn b(&self) -> f64 {
         self.e[2]
     }
+
+    fn length(&self) -> f64 {
+        self.squared_length().sqrt()
+    }
+
+    fn squared_length(&self) -> f64 {
+        self.e.iter().map(|val| val.powi(2)).sum::<f64>()
+    }
 }
 
 impl Neg for Vec3 {
@@ -53,6 +61,7 @@ impl Index<usize> for Vec3 {
 impl Index<usize> for &Vec3 {
     type Output = f64;
 
+    // TODO: the example shows that it returns the real f64, double check this
     fn index(&self, index: usize) -> &f64 {
         &self.e[index]
     }
@@ -99,6 +108,22 @@ impl Sub for &Vec3 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn it_creates_new_vec3_with_valid_properties() {
+        let vec3 = Vec3::new(1.0, 2.0, 3.0);
+
+        assert_eq!(1.0, vec3.x());
+        assert_eq!(2.0, vec3.y());
+        assert_eq!(3.0, vec3.z());
+
+        assert_eq!(1.0, vec3.r());
+        assert_eq!(2.0, vec3.g());
+        assert_eq!(3.0, vec3.b());
+
+        assert_eq!(14.0, vec3.squared_length());
+        assert_eq!(14.0, vec3.length().powi(2));
+    }
 
     #[test]
     fn it_makes_new_negative_vec3() {

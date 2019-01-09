@@ -6,6 +6,7 @@ use std::ops::SubAssign;
 use std::ops::Index;
 use std::ops::Div;
 use std::ops::Mul;
+use std::ops::IndexMut;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
@@ -57,8 +58,8 @@ impl Vec3 {
     fn cross(left: &Vec3, right: &Vec3) -> Vec3 {
         Vec3::new(
             left.e[1] * right.e[2] - left.e[2] * right.e[1],
-            -(left.e[0]*right.e[2] - left.e[2]*right.e[0]),
-            left.e[0]*right.e[1] - left.e[1]*right.e[2],
+            -(left.e[0] * right.e[2] - left.e[2] * right.e[0]),
+            left.e[0] * right.e[1] - left.e[1] * right.e[2],
         )
     }
 }
@@ -82,9 +83,14 @@ impl Index<usize> for Vec3 {
 impl Index<usize> for &Vec3 {
     type Output = f64;
 
-    // TODO: the example shows that it returns the real f64, double check this
     fn index(&self, index: usize) -> &f64 {
         &self.e[index]
+    }
+}
+
+impl IndexMut<usize> for Vec3 {
+    fn index_mut(&mut self, index: usize) -> &mut f64 {
+        &mut self.e[index]
     }
 }
 
@@ -237,21 +243,6 @@ mod tests {
     }
 
     #[test]
-    fn it_can_use_indices() {
-        let vec3 = Vec3::new(1.0, 2.0, 3.0);
-
-        // check reference indices
-        assert_eq!(&1.0, &vec3[0]);
-        assert_eq!(&2.0, &vec3[1]);
-        assert_eq!(&3.0, &vec3[2]);
-
-        // check moved indices
-        assert_eq!(1.0, vec3[0]);
-        assert_eq!(2.0, vec3[1]);
-        assert_eq!(3.0, vec3[2]);
-    }
-
-    #[test]
     fn it_performs_add_operation_on_two_vec3s_and_returns_new_vec3() {
         let vec3_first = Vec3::new(1.0, 2.0, 3.0);
         let vec3_second = Vec3::new(4.0, 5.0, 6.0);
@@ -262,6 +253,39 @@ mod tests {
         // make sure we haven't changed the original vec3s
         assert_eq!(Vec3::new(1.0, 2.0, 3.0), vec3_first);
         assert_eq!(Vec3::new(4.0, 5.0, 6.0), vec3_second);
+    }
+
+    #[test]
+    fn it_can_use_indices_and_assign_them() {
+        let mut vec3 = Vec3::new(1.0, 2.0, 3.0);
+
+        // check reference indices
+        assert_eq!(&1.0, &vec3[0]);
+        assert_eq!(&2.0, &vec3[1]);
+        assert_eq!(&3.0, &vec3[2]);
+
+        vec3[0] = 4.0;
+        vec3[1] = 5.0;
+        vec3[2] = 6.0;
+
+        assert_eq!(&4.0, &vec3[0]);
+        assert_eq!(&5.0, &vec3[1]);
+        assert_eq!(&6.0, &vec3[2]);
+        // check moved indices with a reference
+        {
+            let reference = &mut vec3;
+            reference[0] = 7.0;
+            reference[1] = 8.0;
+            reference[2] = 9.0;
+
+            assert_eq!(7.0, reference[0]);
+            assert_eq!(8.0, reference[1]);
+            assert_eq!(9.0, reference[2]);
+        }
+
+        assert_eq!(7.0, vec3[0]);
+        assert_eq!(8.0, vec3[1]);
+        assert_eq!(9.0, vec3[2]);
     }
 
     #[test]

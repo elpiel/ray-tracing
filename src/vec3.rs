@@ -16,8 +16,8 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
-    pub fn new(e0: f64, e1: f64, e2: f64) -> Vec3 {
-        Vec3 { e: [e0, e1, e2] }
+    pub fn new(e0: f64, e1: f64, e2: f64) -> Self {
+        Self { e: [e0, e1, e2] }
     }
     pub fn x(&self) -> f64 {
         self.e[0]
@@ -53,16 +53,16 @@ impl Vec3 {
         self.e[2] *= k;
     }
 
-    pub fn unit_vector(vec3: Vec3) -> Vec3 {
-        return vec3 / vec3.length()
+    pub fn unit_vector(vec3: Self) -> Self {
+        vec3 / vec3.length()
     }
 
-    pub fn dot(left: Vec3, rhs: Vec3) -> f64 {
+    pub fn dot(left: Self, rhs: Self) -> f64 {
         left.e.iter().enumerate().map(|(index, val)| val * rhs[index]).sum()
     }
 
-    pub fn cross(left: Vec3, rhs: Vec3) -> Vec3 {
-        Vec3::new(
+    pub fn cross(left: Self, rhs: Self) -> Self {
+        Self::new(
             left.e[1] * rhs.e[2] - left.e[2] * rhs.e[1],
             -(left.e[0] * rhs.e[2] - left.e[2] * rhs.e[0]),
             left.e[0] * rhs.e[1] - left.e[1] * rhs.e[2],
@@ -71,10 +71,10 @@ impl Vec3 {
 }
 
 impl Neg for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn neg(self) -> Vec3 {
-        Vec3::new(-self.e[0], -self.e[1], -self.e[2])
+    fn neg(self) -> Self {
+        Self::new(-self.e[0], -self.e[1], -self.e[2])
     }
 }
 
@@ -102,24 +102,24 @@ impl IndexMut<usize> for Vec3 {
 
 // Add/Sub
 impl Add for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn add(self, rhs: Vec3) -> Vec3 {
-        Vec3::new(self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2])
+    fn add(self, rhs: Self) -> Self {
+        Self::new(self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2])
     }
 }
 
 impl Sub for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn sub(self, rhs: Vec3) -> Vec3 {
-        Vec3::new(self.e[0] - rhs.e[0], self.e[1] - rhs.e[1], self.e[2] - rhs.e[2])
+    fn sub(self, rhs: Self) -> Self {
+        Self::new(self.e[0] - rhs.e[0], self.e[1] - rhs.e[1], self.e[2] - rhs.e[2])
     }
 }
 
 // AddAssign/SubAssign - With Vec3
 impl AddAssign<Vec3> for Vec3 {
-    fn add_assign(&mut self, rhs: Vec3) {
+    fn add_assign(&mut self, rhs: Self) {
         self.e[0] += rhs.e[0];
         self.e[1] += rhs.e[1];
         self.e[2] += rhs.e[2];
@@ -127,7 +127,7 @@ impl AddAssign<Vec3> for Vec3 {
 }
 
 impl SubAssign<Vec3> for Vec3 {
-    fn sub_assign(&mut self, rhs: Vec3) {
+    fn sub_assign(&mut self, rhs: Self) {
         self.e[0] -= rhs.e[0];
         self.e[1] -= rhs.e[1];
         self.e[2] -= rhs.e[2];
@@ -136,24 +136,24 @@ impl SubAssign<Vec3> for Vec3 {
 
 // Mul/Div
 impl Mul for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn mul(self, rhs: Vec3) -> Vec3 {
-        Vec3::new(self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2])
+    fn mul(self, rhs: Self) -> Self {
+        Self::new(self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2])
     }
 }
 
 impl Div for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn div(self, rhs: Vec3) -> Vec3 {
-        Vec3::new(self.e[0] / rhs.e[0], self.e[1] / rhs.e[1], self.e[2] / rhs.e[2])
+    fn div(self, rhs: Self) -> Self {
+        Self::new(self.e[0] / rhs.e[0], self.e[1] / rhs.e[1], self.e[2] / rhs.e[2])
     }
 }
 
 // MulAssign/DivAssign
 impl MulAssign for Vec3 {
-    fn mul_assign(&mut self, rhs: Vec3) {
+    fn mul_assign(&mut self, rhs: Self) {
         self.e[0] *= rhs.e[0];
         self.e[1] *= rhs.e[1];
         self.e[2] *= rhs.e[2];
@@ -161,7 +161,7 @@ impl MulAssign for Vec3 {
 }
 
 impl DivAssign for Vec3 {
-    fn div_assign(&mut self, rhs: Vec3) {
+    fn div_assign(&mut self, rhs: Self) {
         self.e[0] /= rhs.e[0];
         self.e[1] /= rhs.e[1];
         self.e[2] /= rhs.e[2];
@@ -170,18 +170,18 @@ impl DivAssign for Vec3 {
 
 // Mul/Div with f64
 impl Mul<f64> for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn mul(self, rhs: f64) -> Vec3 {
-        Vec3::new(rhs * self.e[0], rhs * self.e[1], rhs * self.e[2])
+    fn mul(self, rhs: f64) -> Self {
+        Self::new(rhs * self.e[0], rhs * self.e[1], rhs * self.e[2])
     }
 }
 
 impl Div<f64> for Vec3 {
-    type Output = Vec3;
+    type Output = Self;
 
-    fn div(self, divider: f64) -> Vec3 {
-        Vec3::new(self.e[0] / divider, self.e[1] / divider, self.e[2] / divider)
+    fn div(self, divider: f64) -> Self {
+        Self::new(self.e[0] / divider, self.e[1] / divider, self.e[2] / divider)
     }
 }
 

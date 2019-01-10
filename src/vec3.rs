@@ -53,6 +53,10 @@ impl Vec3 {
         self.e[2] *= k;
     }
 
+    pub fn unit_vector(vec3: Vec3) -> Vec3 {
+        return vec3 / vec3.length()
+    }
+
     pub fn dot(left: Vec3, rhs: Vec3) -> f64 {
         left.e.iter().enumerate().map(|(index, val)| val * rhs[index]).sum()
     }
@@ -199,6 +203,17 @@ impl DivAssign<f64> for Vec3 {
     }
 }
 
+// implementations for Mul/Div for f64 * Vec3
+
+// Mul with f64
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self * rhs.e[0], self * rhs.e[1], self * rhs.e[2])
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -222,6 +237,16 @@ mod tests {
         assert_eq!(Vec3::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732), vec3);
         assert_eq!(1.0, vec3.length());
         assert_eq!(1.0, vec3.squared_length());
+    }
+
+    #[test]
+    fn it_create_unit_vector() {
+        let vec3 = Vec3::new(1.0, 2.0, 3.0);
+
+        let unit_vector = Vec3::unit_vector(vec3);
+
+        assert_eq!(Vec3::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732), unit_vector);
+        assert_eq!(Vec3::new(1.0, 2.0, 3.0), vec3)
     }
 
     #[test]
@@ -354,13 +379,20 @@ mod tests {
 
     #[test]
     fn it_performs_mul_operation_on_vec3_with_f64_and_returns_new_vec3() {
-        let vec3 = Vec3::new(2.0, 3.0, 4.0);
+        let vec3_first = Vec3::new(2.0, 3.0, 4.0);
         let multiplier: f64 = 3.0;
 
-        assert_eq!(Vec3::new(6.0, 9.0, 12.0), vec3 * multiplier);
+        assert_eq!(Vec3::new(6.0, 9.0, 12.0), vec3_first * multiplier);
 
         // make sure we haven't changed the original values
-        assert_eq!(Vec3::new(2.0, 3.0, 4.0), vec3);
+        assert_eq!(Vec3::new(2.0, 3.0, 4.0), vec3_first);
+        assert_eq!(3.0, multiplier);
+
+        let vec3_second = Vec3::new(3.0, 4.0, 5.0);
+
+        assert_eq!(Vec3::new(9.0, 12.0, 15.0), vec3_second * multiplier);
+        // make sure we haven't changed the original values
+        assert_eq!(Vec3::new(3.0, 4.0, 5.0), vec3_second);
         assert_eq!(3.0, multiplier);
     }
 

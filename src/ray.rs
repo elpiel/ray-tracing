@@ -1,25 +1,17 @@
 use crate::vec3::Vec3;
 
 pub struct Ray {
-    a: Vec3,
-    b: Vec3,
+    origin: Vec3,
+    direction: Vec3,
 }
 
 impl Ray {
-    pub fn new(a: Vec3, b: Vec3) -> Ray {
-        Ray { a, b }
-    }
-
-    pub fn origin(&self) -> Vec3 {
-        self.a
-    }
-
-    pub fn direction(&self) -> Vec3 {
-        self.b
+    pub fn new(origin: Vec3, direction: Vec3) -> Ray {
+        Ray { origin, direction }
     }
 
     pub fn point_at_parameter(&self, t: f64) -> Vec3 {
-        self.a + self.b * t
+        self.origin + self.direction * t
     }
 }
 
@@ -34,8 +26,7 @@ mod test {
         let ray = Ray::new(origin, direction);
 
         assert_eq!(Vec3::new(9.0, 12.0, 15.0), ray.point_at_parameter(2.0));
-        assert_eq!(&Vec3::new(1.0, 2.0, 3.0), &ray.origin());
-        assert_eq!(&Vec3::new(4.0, 5.0, 6.0), &ray.direction());
-
+        assert_eq!(&Vec3::new(1.0, 2.0, 3.0), &ray.origin);
+        assert_eq!(&Vec3::new(4.0, 5.0, 6.0), &ray.direction);
     }
 }

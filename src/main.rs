@@ -5,13 +5,6 @@ use std::io::prelude::*;
 use ray_tracing::Ray;
 use ray_tracing::Vec3;
 
-fn color(ray: &Ray) -> Vec3 {
-    let unit_direction = Vec3::unit_vector(ray.direction);
-    let t = 0.5 * (unit_direction.y() + 1.0);
-
-    (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
-}
-
 fn main() -> Result<(), std::io::Error> {
     let width = 200;
     let height = 100;
@@ -47,4 +40,26 @@ fn main() -> Result<(), std::io::Error> {
     }
 
     Ok(())
+}
+
+fn color(ray: &Ray) -> Vec3 {
+    let sphere_center = Vec3::new(0.0, 0.0, -1.0);
+    if hit_sphere(&sphere_center, 0.5, &ray) {
+        return Vec3::new(1.0, 0.0, 0.0);
+    }
+    let unit_direction = Vec3::unit_vector(ray.direction);
+    let t = 0.5 * (unit_direction.y() + 1.0);
+
+    (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
+}
+
+fn hit_sphere(center: &Vec3, radius: f64, ray: &Ray) -> bool {
+    let origin_center = ray.origin - *center;
+
+    let a: f64 = Vec3::dot(ray.direction, ray.direction);
+    let b: f64 = 2.0 * Vec3::dot(origin_center, ray.direction);
+    let c: f64 = Vec3::dot(origin_center, origin_center) - radius.powi(2);
+    let discriminant = b.powi(2) - 4.0 * a * c;
+
+    discriminant > 0.0
 }

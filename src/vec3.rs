@@ -117,6 +117,23 @@ impl Sub for Vec3 {
     }
 }
 
+// Add/Sub with f64
+impl Add<f64> for Vec3 {
+    type Output = Self;
+
+    fn add(self, rhs: f64) -> Self {
+        Self::new(self.e[0] + rhs, self.e[1] + rhs, self.e[2] + rhs)
+    }
+}
+
+impl Sub<f64> for Vec3 {
+    type Output = Self;
+
+    fn sub(self, rhs: f64) -> Self {
+        Self::new(self.e[0] - rhs, self.e[1] - rhs, self.e[2] - rhs)
+    }
+}
+
 // AddAssign/SubAssign - With Vec3
 impl AddAssign<Vec3> for Vec3 {
     fn add_assign(&mut self, rhs: Self) {
@@ -257,18 +274,6 @@ mod tests {
     }
 
     #[test]
-    fn it_performs_add_operation_on_two_vec3s_and_returns_new_vec3() {
-        let vec3_left = Vec3::new(1.0, 2.0, 3.0);
-        let vec3_rhs = Vec3::new(4.0, 5.0, 6.0);
-
-        assert_eq!(Vec3::new(5.0, 7.0, 9.0), vec3_left + vec3_rhs);
-
-        // make sure we haven't changed the original vec3s
-        assert_eq!(Vec3::new(1.0, 2.0, 3.0), vec3_left);
-        assert_eq!(Vec3::new(4.0, 5.0, 6.0), vec3_rhs);
-    }
-
-    #[test]
     fn it_can_use_indices_and_assign_them() {
         let mut vec3 = Vec3::new(1.0, 2.0, 3.0);
 
@@ -299,6 +304,38 @@ mod tests {
         assert_eq!(7.0, vec3[0]);
         assert_eq!(8.0, vec3[1]);
         assert_eq!(9.0, vec3[2]);
+    }
+
+    #[test]
+    fn it_performs_add_operation_on_two_vec3s_and_returns_new_vec3() {
+        let vec3_left = Vec3::new(1.0, 2.0, 3.0);
+        let vec3_rhs = Vec3::new(4.0, 5.0, 6.0);
+
+        assert_eq!(Vec3::new(5.0, 7.0, 9.0), vec3_left + vec3_rhs);
+
+        // make sure we haven't changed the original vec3s
+        assert_eq!(Vec3::new(1.0, 2.0, 3.0), vec3_left);
+        assert_eq!(Vec3::new(4.0, 5.0, 6.0), vec3_rhs);
+    }
+
+    #[test]
+    fn it_performs_add_operation_on_vec3_with_f64_and_returns_new_vec3() {
+        let vec3 = Vec3::new(3.0, 5.0, 7.0);
+
+        assert_eq!(Vec3::new(5.0, 7.0, 9.0), vec3 + 2.0);
+
+        // make sure we haven't changed the original vec3s
+        assert_eq!(Vec3::new(3.0, 5.0, 7.0), vec3);
+    }
+
+    #[test]
+    fn it_performs_sub_operation_on_vec3_with_f64_and_returns_new_vec3() {
+        let vec3_left = Vec3::new(3.0, 5.0, 7.0);
+
+        assert_eq!(Vec3::new(1.0, 3.0, 5.0), vec3_left - 2.0);
+
+        // make sure we haven't changed the original vec3s
+        assert_eq!(Vec3::new(3.0, 5.0, 7.0), vec3_left);
     }
 
     #[test]

@@ -1,15 +1,11 @@
 [package]
-name = "ray_tracing"
+name = "ray_trace"
 version = "0.1.0"
 authors = ["LachezarLechev <lachezar.lechev@skydreams.com>"]
 edition = "2018"
 
 [lib]
-name = "ray_tracing"
+name = "ray_trace"
 path = "src/lib.rs"
-
-[[bin]]
-name = "ray_tracing"
-path = "src/main.rs"
 
 [dependencies]

@@ -1,4 +1,4 @@
 [[package]]
-name = "ray_tracing"
+name = "ray_trace"
 version = "0.1.0"
 

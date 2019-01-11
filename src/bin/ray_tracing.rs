@@ -2,8 +2,8 @@ use std::fs::File;
 use std::io::LineWriter;
 use std::io::prelude::*;
 
-use ray_tracing::Ray;
-use ray_tracing::Vec3;
+use ray_trace::Ray;
+use ray_trace::Vec3;
 
 fn main() -> Result<(), std::io::Error> {
     let width = 200;

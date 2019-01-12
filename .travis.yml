@@ -34,9 +34,10 @@ addons:
       - gcc
       - binutils-dev
       - libiberty-dev
+before_script:
+  - cargo fmt -- --check
+  - cargo clippy --all-targets --all-features -- -D warnings
 scripts:
-    - cargo fmt -- --check
-    - cargo clippy --all-targets --all-features -- -D warnings
     - cargo test
 after_success: |
     for file in target/debug/ray_trace-*[^\.d]; do mkdir -p "target/cov/$(basename $file)"; $HOME/kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&

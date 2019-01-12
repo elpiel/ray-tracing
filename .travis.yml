@@ -22,6 +22,8 @@ install:
   - make install DESTDIR=$HOME/kcov-build
   - cd ../..
   - rm -rf kcov-master
+  - rustup component add rustfmt
+  - rustup component add clippy
 addons:
   apt:
     packages:
@@ -32,9 +34,8 @@ addons:
       - gcc
       - binutils-dev
       - libiberty-dev
-before_script:
-    - rustup component add clippy
 scripts:
+    - cargo fmt -- --check
     - cargo clippy --all-targets --all-features -- -D warnings
     - cargo test
 after_success: |

@@ -1,6 +1,6 @@
 use std::fs::File;
-use std::io::LineWriter;
 use std::io::prelude::*;
+use std::io::LineWriter;
 
 use ray_trace::Ray;
 use ray_trace::Vec3;
@@ -23,8 +23,8 @@ fn main() -> Result<(), std::io::Error> {
 
     for j in (0..height).rev() {
         for i in 0..width {
-            let u = i as f64 / width as f64;
-            let v = j as f64 / height as f64;
+            let u = f64::from(i) / f64::from(width);
+            let v = f64::from(j) / f64::from(height);
             let destination = lower_left_corner + u * horizontal + v * vertical;
 
             let ray = Ray::new(origin, destination);

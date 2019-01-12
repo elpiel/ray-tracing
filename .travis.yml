@@ -36,7 +36,7 @@ addons:
       - libiberty-dev
 before_script:
   - cargo fmt -- --check
-  - cargo clippy --all-targets --all-features -- -D warnings
+  - cargo clippy --all-targets --all-features -- -D warnings -A clippy::float_cmp
 scripts:
     - cargo test
 after_success: |

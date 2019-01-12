@@ -22,6 +22,8 @@ install:
   - make install DESTDIR=$HOME/kcov-build
   - cd ../..
   - rm -rf kcov-master
+  - rustup component add rustfmt
+  - rustup component add clippy
 addons:
   apt:
     packages:
@@ -33,9 +35,9 @@ addons:
       - binutils-dev
       - libiberty-dev
 before_script:
-    - rustup component add clippy
+  - cargo fmt -- --check
+  - cargo clippy --all-targets --all-features -- -D warnings -A clippy::float_cmp
 scripts:
-    - cargo clippy --all-targets --all-features -- -D warnings
     - cargo test
 after_success: |
     for file in target/debug/ray_trace-*[^\.d]; do mkdir -p "target/cov/$(basename $file)"; $HOME/kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&

@@ -1,18 +1,18 @@
 use std::ops::Add;
-use std::ops::Sub;
-use std::ops::Neg;
 use std::ops::AddAssign;
-use std::ops::SubAssign;
-use std::ops::Index;
 use std::ops::Div;
-use std::ops::Mul;
-use std::ops::IndexMut;
-use std::ops::MulAssign;
 use std::ops::DivAssign;
+use std::ops::Index;
+use std::ops::IndexMut;
+use std::ops::Mul;
+use std::ops::MulAssign;
+use std::ops::Neg;
+use std::ops::Sub;
+use std::ops::SubAssign;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
-    e: [f64; 3]
+    e: [f64; 3],
 }
 
 impl Vec3 {
@@ -58,7 +58,11 @@ impl Vec3 {
     }
 
     pub fn dot(left: Self, rhs: Self) -> f64 {
-        left.e.iter().enumerate().map(|(index, val)| val * rhs[index]).sum()
+        left.e
+            .iter()
+            .enumerate()
+            .map(|(index, val)| val * rhs[index])
+            .sum()
     }
 
     pub fn cross(left: Self, rhs: Self) -> Self {
@@ -105,7 +109,11 @@ impl Add for Vec3 {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        Self::new(self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2])
+        Self::new(
+            self.e[0] + rhs.e[0],
+            self.e[1] + rhs.e[1],
+            self.e[2] + rhs.e[2],
+        )
     }
 }
 
@@ -113,7 +121,11 @@ impl Sub for Vec3 {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        Self::new(self.e[0] - rhs.e[0], self.e[1] - rhs.e[1], self.e[2] - rhs.e[2])
+        Self::new(
+            self.e[0] - rhs.e[0],
+            self.e[1] - rhs.e[1],
+            self.e[2] - rhs.e[2],
+        )
     }
 }
 
@@ -156,7 +168,11 @@ impl Mul for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
-        Self::new(self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2])
+        Self::new(
+            self.e[0] * rhs.e[0],
+            self.e[1] * rhs.e[1],
+            self.e[2] * rhs.e[2],
+        )
     }
 }
 
@@ -164,7 +180,11 @@ impl Div for Vec3 {
     type Output = Self;
 
     fn div(self, rhs: Self) -> Self {
-        Self::new(self.e[0] / rhs.e[0], self.e[1] / rhs.e[1], self.e[2] / rhs.e[2])
+        Self::new(
+            self.e[0] / rhs.e[0],
+            self.e[1] / rhs.e[1],
+            self.e[2] / rhs.e[2],
+        )
     }
 }
 
@@ -198,7 +218,11 @@ impl Div<f64> for Vec3 {
     type Output = Self;
 
     fn div(self, divider: f64) -> Self {
-        Self::new(self.e[0] / divider, self.e[1] / divider, self.e[2] / divider)
+        Self::new(
+            self.e[0] / divider,
+            self.e[1] / divider,
+            self.e[2] / divider,
+        )
     }
 }
 
@@ -251,7 +275,14 @@ mod tests {
         assert_eq!(14.0, vec3.length().powi(2));
 
         vec3.make_unit_vector();
-        assert_eq!(Vec3::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732), vec3);
+        assert_eq!(
+            Vec3::new(
+                0.267_261_241_912_424_4,
+                0.534_522_483_824_848_8,
+                0.801_783_725_737_273_2
+            ),
+            vec3
+        );
         assert_eq!(1.0, vec3.length());
         assert_eq!(1.0, vec3.squared_length());
     }
@@ -262,7 +293,14 @@ mod tests {
 
         let unit_vector = Vec3::unit_vector(vec3);
 
-        assert_eq!(Vec3::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732), unit_vector);
+        assert_eq!(
+            Vec3::new(
+                0.267_261_241_912_424_4,
+                0.534_522_483_824_848_8,
+                0.801_783_725_737_273_2
+            ),
+            unit_vector
+        );
         assert_eq!(Vec3::new(1.0, 2.0, 3.0), vec3)
     }
 
@@ -423,14 +461,12 @@ mod tests {
 
         // make sure we haven't changed the original values
         assert_eq!(Vec3::new(2.0, 3.0, 4.0), vec3_first);
-        assert_eq!(3.0, multiplier);
 
         let vec3_second = Vec3::new(3.0, 4.0, 5.0);
 
         assert_eq!(Vec3::new(9.0, 12.0, 15.0), vec3_second * multiplier);
         // make sure we haven't changed the original values
         assert_eq!(Vec3::new(3.0, 4.0, 5.0), vec3_second);
-        assert_eq!(3.0, multiplier);
     }
 
     #[test]
@@ -442,7 +478,6 @@ mod tests {
 
         // make sure we haven't changed the original values
         assert_eq!(Vec3::new(12.0, 4.0, 8.0), vec3);
-        assert_eq!(4.0, divider);
     }
 
     #[test]
@@ -452,8 +487,6 @@ mod tests {
 
         vec3 *= multiplier;
         assert_eq!(Vec3::new(6.0, 9.0, 12.0), vec3);
-        // make sure we haven't changed the original value
-        assert_eq!(3.0, multiplier);
     }
 
     #[test]
@@ -463,9 +496,6 @@ mod tests {
 
         vec3 /= divider;
         assert_eq!(Vec3::new(3.0, 1.0, 2.0), vec3);
-
-        // make sure we haven't changed the original value
-        assert_eq!(4.0, divider);
     }
 
     #[test]
@@ -483,7 +513,10 @@ mod tests {
         let vec3_left = Vec3::new(2.0, 4.0, 6.0);
         let vec3_rhs = Vec3::new(3.0, 5.0, 7.0);
 
-        assert_eq!(Vec3::new(-2.0, 4.0, -18.0), Vec3::cross(vec3_left, vec3_rhs));
+        assert_eq!(
+            Vec3::new(-2.0, 4.0, -18.0),
+            Vec3::cross(vec3_left, vec3_rhs)
+        );
         assert_eq!(Vec3::new(2.0, 4.0, 6.0), vec3_left);
         assert_eq!(Vec3::new(3.0, 5.0, 7.0), vec3_rhs);
     }

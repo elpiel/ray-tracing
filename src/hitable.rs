@@ -59,13 +59,13 @@ mod test {
     use super::*;
 
     #[derive(Debug, Eq, PartialEq)]
-    struct HitTrueDummy {}
-    impl HitTrueDummy {
+    struct HitDummy {}
+    impl HitDummy {
         pub fn new() -> Self {
             Self {}
         }
     }
-    impl Hitable for HitTrueDummy {
+    impl Hitable for HitDummy {
         fn hit(&self, _ray: &Ray, _t_min: f64, _t_max: f64) -> Option<HitRecord> {
             None
         }
@@ -73,18 +73,22 @@ mod test {
 
     #[test]
     fn hitable_list_iterates_over_hitables() {
-        let dummy_one = HitTrueDummy::new();
-        let dummy_two = HitTrueDummy::new();
+        let dummy_one = HitDummy::new();
+        let dummy_two = HitDummy::new();
         let slice = vec![dummy_one, dummy_two];
         let mut hitable_list = HitableList::new(&slice);
 
-        assert_eq!(Some(&HitTrueDummy::new()), hitable_list.next());
-        assert_eq!(Some(&HitTrueDummy::new()), hitable_list.next());
+        assert_eq!(Some(&HitDummy::new()), hitable_list.next());
+        assert_eq!(Some(&HitDummy::new()), hitable_list.next());
         assert_eq!(None, hitable_list.next());
     }
 
     #[test]
     fn hitable_list_from_a_vec() {
-        // TODO: Implement this test
+        let vector = vec![HitDummy::new(), HitDummy::new()];
+
+        let hitable_list = HitableList::from(&vector);
+
+        assert_eq!(2, hitable_list.count());
     }
 }

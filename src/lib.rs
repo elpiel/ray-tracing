@@ -1,3 +1,5 @@
+pub mod hitable;
+pub mod object;
 mod ray;
 mod vec3;
 

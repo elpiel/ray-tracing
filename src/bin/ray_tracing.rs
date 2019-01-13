@@ -58,14 +58,14 @@ fn color<T: Hitable>(ray: &Ray, world: &HitableList<T>) -> Vec3 {
     match world.hit(ray, 0.0, f64::MAX) {
         Some(hit_result) => {
             0.5 * Vec3::new(
-                hit_result.normal.x + 1.0,
-                hit_result.normal.y + 1.0,
-                hit_result.normal.z + 1.0,
+                hit_result.normal.x() + 1.0,
+                hit_result.normal.y() + 1.0,
+                hit_result.normal.z() + 1.0,
             )
         }
         None => {
             let unit_direction = Vec3::unit_vector(ray.direction);
-            let t = 0.5 * (unit_direction.y + 1.0);
+            let t = 0.5 * (unit_direction.y() + 1.0);
 
             (1.0 - t) * vec3_1_1_1 + t * Vec3::new(0.5, 0.7, 1.0)
         }

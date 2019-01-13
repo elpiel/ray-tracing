@@ -13,25 +13,29 @@ use std::ops::SubAssign;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
     e: [f64; 3],
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-    pub r: f64,
-    pub g: f64,
-    pub b: f64,
 }
 
 impl Vec3 {
     pub fn new(e0: f64, e1: f64, e2: f64) -> Self {
-        Self {
-            e: [e0, e1, e2],
-            x: e0,
-            y: e1,
-            z: e2,
-            r: e0,
-            g: e1,
-            b: e2,
-        }
+        Self { e: [e0, e1, e2] }
+    }
+    pub fn x(&self) -> f64 {
+        self.e[0]
+    }
+    pub fn y(&self) -> f64 {
+        self.e[1]
+    }
+    pub fn z(&self) -> f64 {
+        self.e[2]
+    }
+    pub fn r(&self) -> f64 {
+        self.e[0]
+    }
+    pub fn g(&self) -> f64 {
+        self.e[1]
+    }
+    pub fn b(&self) -> f64 {
+        self.e[2]
     }
     pub fn length(&self) -> f64 {
         self.squared_length().sqrt()
@@ -258,13 +262,13 @@ mod tests {
     fn it_creates_new_vec3_with_valid_properties() {
         let mut vec3 = Vec3::new(1.0, 2.0, 3.0);
 
-        assert_eq!(1.0, vec3.x);
-        assert_eq!(2.0, vec3.y);
-        assert_eq!(3.0, vec3.z);
+        assert_eq!(1.0, vec3.x());
+        assert_eq!(2.0, vec3.y());
+        assert_eq!(3.0, vec3.z());
 
-        assert_eq!(1.0, vec3.r);
-        assert_eq!(2.0, vec3.g);
-        assert_eq!(3.0, vec3.b);
+        assert_eq!(1.0, vec3.r());
+        assert_eq!(2.0, vec3.g());
+        assert_eq!(3.0, vec3.b());
 
         assert_eq!(14.0, vec3.squared_length());
         assert_eq!(14.0, vec3.length().powi(2));

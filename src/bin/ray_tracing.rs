@@ -2,16 +2,21 @@ use std::f64;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::LineWriter;
+use std::ops::Div;
+
+use rand::{thread_rng, Rng};
 
 use ray_trace::hitable::Hitable;
 use ray_trace::hitable::HitableList;
 use ray_trace::object::Sphere;
+use ray_trace::Camera;
 use ray_trace::Ray;
 use ray_trace::Vec3;
 
 fn main() -> Result<(), std::io::Error> {
     let width = 200;
     let height = 100;
+    let samples_per_pixel = 100;
     let max_color = 255;
 
     let file = File::create("image.ppm")?;
@@ -20,25 +25,28 @@ fn main() -> Result<(), std::io::Error> {
     let beginning_file = format!("P3\n{} {}\n{}\n", width, height, max_color);
     file.write_all(beginning_file.as_bytes())?;
 
-    let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
-    let horizontal = Vec3::new(4.0, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, 2.0, 0.0);
-    let origin = Vec3::new(0.0, 0.0, 0.0);
-
     let objects = vec![
         Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5),
         Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0),
     ];
     let world = HitableList::from(&objects);
+    let camera = Camera::default();
+    let mut rng = thread_rng();
 
     for j in (0..height).rev() {
         for i in 0..width {
-            let u = f64::from(i) / f64::from(width);
-            let v = f64::from(j) / f64::from(height);
-            let destination = lower_left_corner + u * horizontal + v * vertical;
+            let col = (0..samples_per_pixel)
+                .fold(Vec3::new(0.0, 0.0, 0.0), |mut col, _| {
+                    let u = (f64::from(i) + rng.gen::<f64>()) / f64::from(width);
+                    let v = (f64::from(j) + rng.gen::<f64>()) / f64::from(height);
 
-            let ray = Ray::new(origin, destination);
-            let col = color(&ray, &world);
+                    let ray = camera.get_ray(u, v);
+                    let _p = ray.point_at_parameter(2.0);
+
+                    col += color(&ray, &world);
+                    col
+                })
+                .div(f64::from(samples_per_pixel));
 
             let ir = (255.99 * col[0]) as i32;
             let ig = (255.99 * col[1]) as i32;

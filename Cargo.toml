@@ -9,3 +9,4 @@ name = "ray_trace"
 path = "src/lib.rs"
 
 [dependencies]
+rand = "^0.6"

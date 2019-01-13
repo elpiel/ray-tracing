@@ -11,7 +11,9 @@ coverage:
     project:
       default:
         threshold: 5
-    patch: yes
+    patch:
+      default:
+        threshold: 5
     changes: no
 
 comment:

@@ -1,0 +1,49 @@
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--write-mode=overwrite"]
+
+[tasks.check-format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--check"]
+
+[tasks.check-clippy]
+install_crate = "clippy"
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings", "-A", "clippy::float_cmp"]
+
+[tasks.check-quick]
+dependencies = [
+    "check-format",
+    "check-clippy",
+    "test",
+]
+
+[tasks.test]
+command = "cargo"
+args = ["test"]
+
+[tasks.check-all]
+dependencies = [
+	"clean",
+    "check-format",
+    "check-clippy",
+    "test",
+]
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+
+[tasks.build]
+command = "cargo"
+args = ["build"]
+
+[tasks.clean-build]
+dependencies = [
+	"clean",
+    "build",
+    "test"
+]
+

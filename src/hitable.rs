@@ -83,7 +83,8 @@ mod test {
         assert_eq!(None, hitable_list.next());
     }
 
-    fn hitable_list_from_a_vec_reference() {
+    #[test]
+    fn hitable_list_from_a_vec() {
         // TODO: Implement this test
     }
 }

@@ -1,7 +1,7 @@
 [tasks.format]
 install_crate = "rustfmt"
 command = "cargo"
-args = ["fmt", "--", "--write-mode=overwrite"]
+args = ["fmt"]
 
 [tasks.check-format]
 install_crate = "rustfmt"

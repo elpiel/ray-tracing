@@ -46,7 +46,9 @@ fn main() -> Result<(), std::io::Error> {
                     col += color(&ray, &world);
                     col
                 })
-                .div(f64::from(samples_per_pixel));
+                .div(f64::from(samples_per_pixel))
+                // Add `Gamma: 2` for fixing the color
+                .sqrt();
 
             let ir = (255.99 * col[0]) as i32;
             let ig = (255.99 * col[1]) as i32;
@@ -63,13 +65,11 @@ fn main() -> Result<(), std::io::Error> {
 fn color<T: Hitable>(ray: &Ray, world: &HitableList<T>) -> Vec3 {
     let vec3_1_1_1 = Vec3::new(1.0, 1.0, 1.0);
 
-    match world.hit(ray, 0.0, f64::MAX) {
-        Some(hit_result) => {
-            0.5 * Vec3::new(
-                hit_result.normal.x() + 1.0,
-                hit_result.normal.y() + 1.0,
-                hit_result.normal.z() + 1.0,
-            )
+    match world.hit(ray, 0.001, f64::MAX) {
+        Some(hit_record) => {
+            let target = hit_record.p + hit_record.normal + random_in_unit_sphere();
+
+            0.5 * color(&Ray::new(hit_record.p, target - hit_record.p), world)
         }
         None => {
             let unit_direction = Vec3::unit_vector(ray.direction);
@@ -78,4 +78,17 @@ fn color<T: Hitable>(ray: &Ray, world: &HitableList<T>) -> Vec3 {
             (1.0 - t) * vec3_1_1_1 + t * Vec3::new(0.5, 0.7, 1.0)
         }
     }
+}
+
+fn random_in_unit_sphere() -> Vec3 {
+    let mut rng = thread_rng();
+    let mut p: Vec3;
+    loop {
+        let random_vec3 = Vec3::new(rng.gen::<f64>(), rng.gen::<f64>(), rng.gen::<f64>());
+        p = 2.0 * random_vec3 - Vec3::new(1.0, 1.0, 1.0);
+        if p.squared_length() < 1.0 {
+            break;
+        }
+    }
+    p
 }

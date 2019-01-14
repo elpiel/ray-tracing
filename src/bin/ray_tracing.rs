@@ -46,7 +46,9 @@ fn main() -> Result<(), std::io::Error> {
                     col += color(&ray, &world);
                     col
                 })
-                .div(f64::from(samples_per_pixel));
+                .div(f64::from(samples_per_pixel))
+                // Add `Gamma: 2` for fixing the color
+                .sqrt();
 
             let ir = (255.99 * col[0]) as i32;
             let ig = (255.99 * col[1]) as i32;
@@ -63,7 +65,7 @@ fn main() -> Result<(), std::io::Error> {
 fn color<T: Hitable>(ray: &Ray, world: &HitableList<T>) -> Vec3 {
     let vec3_1_1_1 = Vec3::new(1.0, 1.0, 1.0);
 
-    match world.hit(ray, 0.0, f64::MAX) {
+    match world.hit(ray, 0.001, f64::MAX) {
         Some(hit_record) => {
             let target = hit_record.p + hit_record.normal + random_in_unit_sphere();
 

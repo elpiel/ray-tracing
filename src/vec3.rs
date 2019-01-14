@@ -52,6 +52,14 @@ impl Vec3 {
         self.e[2] *= k;
     }
 
+    pub fn sqrt(mut self) -> Self {
+        self.e[0] = self.e[0].sqrt();
+        self.e[1] = self.e[1].sqrt();
+        self.e[2] = self.e[2].sqrt();
+
+        self
+    }
+
     pub fn unit_vector(vec3: Self) -> Self {
         vec3 / vec3.length()
     }
@@ -284,6 +292,13 @@ mod tests {
         );
         assert_eq!(1.0, vec3.length());
         assert_eq!(1.0, vec3.squared_length());
+    }
+
+    #[test]
+    fn it_alters_the_vec_with_square_root() {
+        let vec3 = Vec3::new(4.0, 16.0, 25.0).sqrt();
+
+        assert_eq!(Vec3::new(2.0, 4.0, 5.0), vec3);
     }
 
     #[test]

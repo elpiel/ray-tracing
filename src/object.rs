@@ -1,15 +1,17 @@
 use crate::hitable::{HitRecord, Hitable};
 use crate::Ray;
 use crate::Vec3;
+use crate::material::Material;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
+    pub material: Box<Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64) -> Self {
-        Self { center, radius }
+    pub fn new(center: Vec3, radius: f64, material: Box<Material>) -> Self {
+        Self { center, radius, material }
     }
 }
 
@@ -30,7 +32,7 @@ impl Hitable for Sphere {
                 let p = ray.point_at_parameter(temp);
                 let normal = (p - self.center) / self.radius;
 
-                return Some(HitRecord::new(temp, p, normal));
+                return Some(HitRecord::new(temp, p, normal, &*self.material));
             }
 
             let temp: f64 = (-b + discr_sqrt) / a;
@@ -39,7 +41,7 @@ impl Hitable for Sphere {
                 let p = ray.point_at_parameter(temp);
                 let normal = (p - self.center) / self.radius;
 
-                return Some(HitRecord::new(temp, p, normal));
+                return Some(HitRecord::new(temp, p, normal, &*self.material));
             }
         }
 

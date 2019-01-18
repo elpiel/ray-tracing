@@ -1,16 +1,18 @@
 use crate::ray::Ray;
 use crate::Vec3;
+use crate::material::Material;
 
-#[derive(Debug, PartialEq)]
-pub struct HitRecord {
+#[derive(Clone, Copy, Debug)]
+pub struct HitRecord<'mat> {
     pub t: f64,
     pub p: Vec3,
     pub normal: Vec3,
+    pub material: &'mat Material,
 }
 
-impl HitRecord {
-    pub fn new(t: f64, p: Vec3, normal: Vec3) -> Self {
-        Self { t, p, normal }
+impl<'mat> HitRecord<'mat> {
+    pub fn new(t: f64, p: Vec3, normal: Vec3, material: &'mat Material) -> Self {
+        Self { t, p, normal, material }
     }
 }
 

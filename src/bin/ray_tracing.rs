@@ -1,18 +1,18 @@
-use std::f64;
-use std::fs::File;
-use std::io::LineWriter;
-use std::io::prelude::*;
-use std::ops::Div;
+use std::{
+    f64,
+    fs::File,
+    io::{prelude::*, LineWriter},
+    ops::Div,
+};
 
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
-use ray_trace::Camera;
-use ray_trace::hitable::Hitable;
-use ray_trace::hitable::HitableList;
-use ray_trace::material::Lambertian;
-use ray_trace::object::Sphere;
-use ray_trace::Ray;
-use ray_trace::Vec3;
+use ray_trace::{
+    hitable::{Hitable, HitableList},
+    material::Lambertian,
+    object::Sphere,
+    Camera, Ray, Vec3,
+};
 
 fn main() -> Result<(), std::io::Error> {
     let width = 200;
@@ -26,10 +26,21 @@ fn main() -> Result<(), std::io::Error> {
     let beginning_file = format!("P3\n{} {}\n{}\n", width, height, max_color);
     file.write_all(beginning_file.as_bytes())?;
 
-    let objects = vec!
-    [
-        Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Box::new(Lambertian { albedo: Vec3::new(0.8, 0.3, 0.3) })),
-        Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Box::new(Lambertian { albedo: Vec3::new(0.8, 0.8, 0.0) })),
+    let objects = vec![
+        Sphere::new(
+            Vec3::new(0.0, 0.0, -1.0),
+            0.5,
+            Box::new(Lambertian {
+                albedo: Vec3::new(0.8, 0.3, 0.3),
+            }),
+        ),
+        Sphere::new(
+            Vec3::new(0.0, -100.5, -1.0),
+            100.0,
+            Box::new(Lambertian {
+                albedo: Vec3::new(0.8, 0.8, 0.0),
+            }),
+        ),
     ];
     let world = HitableList::from(&objects);
     let camera = Camera::default();
@@ -72,7 +83,7 @@ fn color<T: Hitable>(ray: &Ray, world: &HitableList<T>, depth: i32) -> Vec3 {
             let scatter = hit_record.material.scatter(&ray, &hit_record);
             match (depth < 50, scatter.1) {
                 (true, Some(scattered_ray)) => color(&scattered_ray, world, depth + 1),
-                (_, _) => Vec3::new(0.0, 0.0, 0.0)
+                (..) => Vec3::new(0.0, 0.0, 0.0),
             }
         }
         None => {

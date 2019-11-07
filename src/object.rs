@@ -1,7 +1,8 @@
-use crate::hitable::{HitRecord, Hitable};
-use crate::Ray;
-use crate::Vec3;
-use crate::material::Material;
+use crate::{
+    hitable::{HitRecord, Hitable},
+    material::Material,
+    Ray, Vec3,
+};
 
 pub struct Sphere {
     pub center: Vec3,
@@ -11,7 +12,11 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn new(center: Vec3, radius: f64, material: Box<Material>) -> Self {
-        Self { center, radius, material }
+        Self {
+            center,
+            radius,
+            material,
+        }
     }
 }
 

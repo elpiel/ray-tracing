@@ -1,8 +1,6 @@
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
-use crate::hitable::HitRecord;
-use crate::Ray;
-use crate::Vec3;
+use crate::{hitable::HitRecord, Ray, Vec3};
 use std::fmt::Debug;
 
 pub trait Material: Debug {
@@ -14,12 +12,14 @@ pub struct Lambertian {
     pub albedo: Vec3,
 }
 
-
 impl Lambertian {
     fn scatter(&self, ray_in: &Ray, hit_record: &HitRecord) -> (Vec3, Option<Ray>) {
         let target = hit_record.p + hit_record.normal + random_in_unit_sphere();
 
-        (self.albedo, Some(Ray::new(hit_record.p, target - hit_record.p)))
+        (
+            self.albedo,
+            Some(Ray::new(hit_record.p, target - hit_record.p)),
+        )
     }
 }
 
@@ -47,7 +47,7 @@ impl Material for Metal {
 
         let scattered = match Vec3::dot(scattered_ray.direction, hit_record.normal) > 0.0 {
             true => Some(scattered_ray),
-            false => None
+            false => None,
         };
         let attenuation = self.albedo;
 
